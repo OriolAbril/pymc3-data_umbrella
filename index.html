@@ -1,97 +1,477 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-
-    <title>reveal.js</title>
-
-    <link rel="stylesheet" href="reveal.js/dist/reset.css" />
-    <link rel="stylesheet" href="reveal.js/dist/reveal.css" />
-    <link rel="stylesheet" href="reveal.js/dist/theme/serif.css" id="theme" />
-
-    <!-- Theme used for syntax highlighted code -->
-    <link
-      rel="stylesheet"
-      href="reveal.js/plugin/highlight/monokai.css"
-      id="highlight-theme"
-    />
+    <meta charset="utf-8">
+    <title>Intuitive Bayesian Modeling | Data Umbrella</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link href="https://use.fontawesome.com/releases/v5.12.0/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" href="reveal.js/dist/reveal.css">
+    <link rel="stylesheet" href="reveal.js/dist/theme/solarized.css">
+    <link rel="stylesheet" href="css/reveal-override.css">
   </head>
   <body>
-    <div class="reveal">
+
+    <div class="reveal logo">
       <div class="slides">
-        <section
-          data-markdown
-          data-separator="-----"
-          data-separator-vertical="---"
-        >
-          <textarea data-template>
-            # Title Page
 
-            ### Date
+        <section>
+          <h2>Intuitive Bayesian Modeling with PyMC<span style="color: #12698a">3</span></h2>
+          <p>at: <b>Data Umbrella</b></p>
+          <p>by: <b>Oriol Abril Pla</b></p>
+          <div>
+            <a href="https://github.com/OriolAbril"><i class="fab fa-github"></i></a>
+            <a href="https://twitter.com/OriolAbril"><i class="fab fa-twitter"></i></a>
+          </div>
 
-            -----
-            
-            Vertical slides are separated by `- - -`
-            
-            ---
-            
-            Vertical slides are separated by `- - -` .
-            
-            ---
-            
-            Vertical slides are separated by `- - -` ..
-     
-            -----
-            
-            # title
-            ## skills
-            * one
-            * two
-            * three
-            
-            ## heading
-            8. three
-            1. one
-            1. two
-         
-            
-            -----
-            
+            <aside class="notes">
+              Onion-like talk, hopefully it will be (partially) useful
+              not only to people interested in PyMC3, but also to people
+              interested in Probabilistic programming or bayes stats in
+              general.
 
-            # Questions
+              Consider changing the title to "Bayesian Data Science with PyMC3"
+              Term coined (AFAIK) by https://odsc.com/speakers/bayesian-data-science-probabilistic-programming-2/
+            </aside>
+        </section>
 
-            -----
+        <!-- ###### Bayesian paradigm ###### -->
+        <section>
+          <section data-auto-animate>
+            <h1>Bayesian paradigm</h1>
+            <p>Data is considered fixed <i>once observed</i></p>
+            <p>Model parameters are <i>treated</i> as random<p>
 
-            ## made with
+            <aside class="notes">
+              * Data are considered fixed. They used to be random,
+                but once they were written into your
+                lab notebook/spreadsheet/IPython notebook they do not change.
+              * Model parameters themselves may not be random, but Bayesians
+                use probability distribtutions to describe their uncertainty
+                in parameter values, and are therefore treated as random.
+                In some cases, it is useful to consider parameters as having
+                been sampled from probability distributions.
+            </aside>
+          </section>
 
-            #### [reveal.js](https://github.com/hakimel/reveal.js)
+          <section data-auto-animate>
+            <p>Data is considered fixed <i>once observed</i></p>
+            <p>Model parameters are <i>treated</i> as random<p>
+            <i class="fas fa-arrow-down"></i>
+            <p>\[p(\theta \mid y)\]</p>
 
-            #### [excalidraw](https://github.com/excalidraw/excalidraw)
+            <aside class="notes">
+              All conclusions from Bayesian statistical procedures are stated
+              in terms of probability statements
 
-          </textarea>
+              This formulation is generally referred to as inverse probability,
+              because it infers from observations to parameters,
+              or from effects to causes.
+            </aside>
+          </section>
+
+          <section data-auto-animate>
+            <p>\[p(\theta \mid y)\]</p>
+            <p><i class="fas fa-arrow-down"></i></p>
+            <img src="images/backward.png"></img>
+          </section>
+
+          <section>
+            \[ p(\theta | y) = \frac{p(y|\theta)p(\theta)}{p(y)} \]
+
+            <aside class="notes">
+              The way to performe this "backwards" movement is by using the
+              Bayes theorem, we combine the a priori information about the
+              parameters with the probability of the observations
+              given some parameters.
+            </aside>
+          </section>
+
+          <section>
+            <h2>Prior information</h2>
+            <ul>
+              <li>Physical constraints</li>
+              <li>Model constraints</li>
+              <li>Prior studies</li>
+              <li>...</li>
+            </ul>
+
+
+            <aside class="notes">
+              The prior distribution encodes any and all information that
+              is known about the model parameters before even gathering our
+              data, which may not be much but hardly ever is *none*, so why
+              not take advantage of it?
+
+              Things like physical constraints: if one parameter is the density
+              of a rock it can't larger than the density of iron.
+              model constraints: variables representing rates or variance can't
+              be negatives. We can also use as priors the results from previous
+              studies, and in case of doubt, one can always use weakly informative
+              priors and perform sensitivity analysis.
+            </aside>
+          </section>
+
+          <section>
+            <h2>Uncertainty</h2>
+            <pre><code>
+d1 = skewnorm(a=3, loc=-2, scale=2.5)
+d2 = skewnorm(a=-4, loc=2, scale=3)
+            </code></pre>
+
+            <aside class="notes">
+              As we were saying, statements are made in terms of probability
+              distributions, which is much more informative than using point
+              estimates or summary statistics. In this case, against what
+              it may seem from the mean and std, the probability of $gt;0
+              is swapped.
+
+              Consider using datasaurus dozen or anscombe's quartet.
+            </aside>
+          </section>
+        </section>
+
+        <!-- ###### Probabilistic Programming ###### -->
+        <section>
+          <section>
+            <h1>Probabilistic Programming</h1>
+          </section>
+
+          <section>
+            <h2>Building blocks</h2>
+            <img src="images/lego.jpg"></img>
+
+            <aside class="notes">
+              Probabilistic Programming languages define base probability
+              distributions, transformations, autoregressive models,
+              gaussian processes... that can be combined to defined
+              a model in terms of probability statements by defining
+              the prior and the likelihood.
+            </aside>
+          </section>
+
+          <section data-auto-animate>
+            <h2>Generative modeling</h2>
+          </section>
+          <section data-auto-animate>
+            <h2>Generative modeling</h2>
+            <img src="images/forward.png"></img>
+
+            <aside class="notes">
+              By defining the models with these probability distribution building
+              blocks, we can directly calculate probabilities of the
+              parameters and of the data given some parameters, but we can do
+              more than that, we can also sample from these distributions.
+              We start from the parameters and from there generate/simulate
+              synthetic data.
+
+              This is called forward sampling, and it is a very powerful technique
+              because it allows you to compare the synthetic data with your
+              observations virtually for free.
+            </aside>
+          </section>
+
+          <section data-auto-animate>
+            <h2 data-id="solvers">Automagical solvers</h2>
+            <img data-id="box" src="images/box.gif"></img>
+          </section>
+          <section data-auto-animate>
+            <h2 data-id="solvers">Inference algorithms</h2>
+            <p>MCMC: HMC+NUTS, Metropolis, Gibbs...</p>
+            <p>Variational Inference: ADVI (+mini batch ADVI), OPVI</p>
+            <img data-id="box" src="images/confused.gif"></img>
+
+            <aside class="notes">
+              And last but not least, probabilistic programming libraries
+              provide multiple inference algorithms to approximate the posterior
+              automatically, you only need to define the model.
+            </aside>
+          </section>
+        </section>
+
+        <!-- ###### PyMC3 ###### -->
+        <section>
+          <section>
+            <h1>PyMC<span style="color: #12698a">3</span></h1>
+
+            <aside class="notes">
+              So what characterizes PyMC3? What makes it an amazing
+              probabilistic programming library?
+            </aside>
+          </section>
+          <section>
+            <h2>Intuitive</h2>
+
+            <aside class="notes">
+              PyMC3 syntax is concise and clear. It generally follows
+              the mathematical notation quite closely.
+            </aside>
+          <section>
+            <h2>Python-driven</h2>
+
+            <aside class="notes">
+              PyMC3 is a Python library built on top of Aesara (the daughter
+              of Theano) a python-driven tensor library. This means that
+              you don't need to learn an extra language to do probabilistic
+              programming and can integrate PyMC3 directly within your
+              current Python code.
+            </aside>
+          </section>
+          <section>
+            <h2>Extensible</h2>
+
+            <aside class="notes">
+              Thanks to being Python driven, PyMC3 can also be easily extended
+              from within Python itself. You can subclass PyMC3 classes
+              to create new distributions, you can use numba to accelerate
+              expensive computations within the model...
+            </aside>
+          </section>
+          <section>
+            <h2>Community driven</h2>
+
+            <aside class="notes">
+              PyMC3 is a community drive project that integrates with the
+              rest of the PyData stack. It has several libraries built
+              on top and the PyMC team contributes to other affine libraries
+              too. It integrates with ArviZ for postprocessing, enabling things
+              like label based indexing and computation with xarray, seamless
+              visualizations with either matplotlib or bokeh or model summaries
+              as pandas dataframes.
+            </aside>
+          </section>
+        </section>
+
+        <!-- ###### Examples ###### -->
+        <section>
+          <h1 class="r-fit-text">PyMC<span style="color: #12698a">3</span> in practice</h1>
+        </section>
+
+        <!-- Coal Mining -->
+        <section>
+          <section data-background-image="images/coal_mine.jpg" data-background-opacity="0.25">
+            <h2>Coal mining disasters</h2>
+            <p>Example from Salvatier, J., Wiecki, T. V., &amp; Fonnesbeck, C. (2016).
+            <i>Probabilistic programming in Python using PyMC3.</i>
+            PeerJ Computer Science</p>
+            <table style="width:100%; border: none" cellspacing="0" cellpadding="0">
+              <tr>
+                <th><a href="https://www.youtube.com/watch?v=M-kBB2I4QlE">Video</a></th>
+                <th><a href="https://docs.pymc.io/notebooks/getting_started.html">Code</a></th>
+              </tr>
+              <tr>
+                <th><small>(talk by <a href="https://twitter.com/fonnesbeck">@fonnesbeck</a>
+                    at Montreal Python)</small></th>
+                <th><small>(2nd case study)</small></th>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <img src="images/coal_mining_data.png"></img>
+          </section>
+
+          <section data-auto-animate>
+            <h3>Model building</h3>
+
+            <div class="container">
+              <div class="col" data-id="math">
+                <small>
+                \[\begin{aligned}
+                    y &amp; \sim \text{Poisson}(r) \\
+                  \end{aligned} \]
+                </small>
+              </div>
+
+              <div class="col">
+                <pre class="python" data-id="code"><code data-noescape>
+with pm.Model():
+    disasters = pm.Poisson(
+        "disasters", rate, observed=data
+    )
+                </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section data-auto-animate>
+            <h3>Model building</h3>
+
+            <div class="container">
+              <div class="col">
+                <small data-id="math">
+                \[\begin{aligned}
+                    y &amp; \sim \text{Poisson}(r) \\
+                    r &amp; = \begin{cases}
+                      e, \ \text{if}\ t \leq s\\
+                      l, \ \text{if}\ t \gt s
+                    \end{cases}
+                  \end{aligned} \]
+                  </small>
+              </div>
+
+              <div class="col">
+                <pre class="python" data-id="code"><code data-noescape>
+with pm.Model():
+    rate = pm.math.switch(s >= years, e, l)
+
+    disasters = pm.Poisson(
+        "disasters", rate, observed=data
+    )
+                </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section data-auto-animate>
+            <h3>Model building</h3>
+
+            <div class="container">
+              <div class="col">
+                <small data-id="math">
+                \[\begin{aligned}
+                    y &amp; \sim \text{Poisson}(r) \\
+                    r &amp; = \begin{cases}
+                      e, \ \text{if}\ t \leq s\\
+                      l, \ \text{if}\ t \gt s
+                    \end{cases} \\
+                    s &amp; \sim \text{DiscreteUniform}(t_0, t_e) \\
+                  \end{aligned} \]
+                  </small>
+              </div>
+
+              <div class="col">
+                <pre class="python" data-id="code"><code data-noescape>
+with pm.Model():
+    s = pm.DiscreteUniform(
+        "switchpoint", lower=t_0, upper=t_e
+    )
+
+    rate = pm.math.switch(s >= years, e, l)
+
+    disasters = pm.Poisson(
+        "disasters", rate, observed=data
+    )
+                </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section data-auto-animate>
+            <h3>Model building</h3>
+
+            <div class="container">
+              <div class="col">
+                <small data-id="math">
+                \[\begin{aligned}
+                    y &amp; \sim \text{Poisson}(r) \\
+                    r &amp; = \begin{cases}
+                      e, \ \text{if}\ t \leq s\\
+                      l, \ \text{if}\ t \gt s
+                    \end{cases}\\
+                    s &amp; \sim \text{DiscreteUniform}(t_0, t_e) \\
+                    e &amp; \sim \text{Exponential}(1) \\
+                    l &amp; \sim \text{Exponential}(1)
+                  \end{aligned} \]
+                  </small>
+              </div>
+
+              <div class="col">
+                <pre class="python" data-id="code"><code data-noescape>
+with pm.Model():
+    s = pm.DiscreteUniform(
+        "switchpoint", lower=t_0, upper=t_e
+    )
+
+    e = pm.Exponential("early_rate", 1.0)
+    l = pm.Exponential("late_rate", 1.0)
+
+    rate = pm.math.switch(s >= years, e, l)
+
+    disasters = pm.Poisson(
+        "disasters", rate, observed=data
+    )
+                </code></pre>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Inference</h2>
+            <pre class="python"><code>
+with model:
+    trace = pm.sample(3000, tune=2000)
+            </code></pre>
+            <pre class="no-highlight"><code data-noescape>
+Multiprocess sampling (4 chains in 4 jobs)
+CompoundStep
+>Metropolis: [switchpoint]
+>NUTS: [late_rate, early_rate]
+            </code></pre>
+          </section>
+
+
+        </section>
+
+        <!-- ###### Berlin living ###### -->
+        <section>
+          <section data-background-image="images/berlin_price_avg.png" data-background-size="cover" data-background-opacity=".25">
+            <h2>Housing prices in Berlin</h2>
+            <p>Example by <a href="https://twitter.com/corrieaar">@corrieaar</a> at PyConDE & PyData Berlin 2019</p>
+            <table style="width:100%">
+              <tr>
+                <th><a href="https://www.youtube.com/watch?v=WbNmcvxRwow">Video</a></th>
+                <th><a href="https://github.com/corriebar/Bayesian-Workflow-with-PyMC">Code</a></th>
+                <th><a href="https://www.slideshare.net/CorrieBartelheimer/bayesian-workflow-with-pymc3-and-arviz">Slides</a></th>
+              </tr>
+            </table>
+          </section>
+        </section>
+
+        <!-- ###### Closing slides ###### -->
+        <section>
+          <h2>Acknowledgements</h2>
+          <small>
+          <p>This talk is heavily inspired by many other talks about
+          Bayesian statistics and PyMC3 as well as by interactions with
+          the whole PyMC3 and greater Bayesian OSS community on GitHub
+          and Discourse</p>
+          <p>Special thanks go to PyMC3 and ArviZ core members, to Thomas Wiecki,
+          Chris Fonnesbeck, Corrie Bartelheimer and Allen Downey, check out
+          their profiles and websites for more amazing content!</p>
+          </small>
+          <div>
+            <a href="https://twitter.com/twiecki">
+            <img src="https://pbs.twimg.com/profile_images/1231531762351779840/KTWRziMx_400x400.jpg" height="150"></img></a>
+            <a href="https://twitter.com/fonnesbeck">
+            <img src="https://pymc-devs.github.io/pymcon/css/2017_style/img/speakers/Fonnesbeck.png" height="150"></img></a>
+            <a href="https://twitter.com/corrieaar">
+            <img src="https://pbs.twimg.com/profile_images/1103568745363054594/JY-tRS1Z_400x400.png" height="150"></img></a>
+            <a href="https://twitter.com/AllenDowney">
+            <img src="https://avatars.githubusercontent.com/u/1882093" height="150"></img></a>
+          </div>
+        </section>
+
+        <section>
+          <h2>Where to go next?</h2>
+          <p class="fragment fade-up">PyMC3 documentation: <a href="https://docs.pymc.io/">docs.pymc.io</a>
+          <p class="fragment fade-up">PyMCon 2020 talks: <a href="https://discourse.pymc.io/c/pymcon/2020talks/15">publicly available on Discourse</a>
+          <p class="fragment fade-up">Learn Bayesian Statistics Podcast: <a href="https://www.learnbayesstats.com/">learnbayesstats.com</a>
         </section>
       </div>
     </div>
 
     <script src="reveal.js/dist/reveal.js"></script>
-    <script src="reveal.js/plugin/notes/notes.js"></script>
-    <script src="reveal.js/plugin/markdown/markdown.js"></script>
+    <link rel="stylesheet" href="reveal.js/plugin/highlight/zenburn.css">
     <script src="reveal.js/plugin/highlight/highlight.js"></script>
-    <script src="reveal.js/plugin/zoom/zoom.js"></script>
+    <script src="reveal.js/plugin/math/math.js"></script>
+    <script src="reveal.js/plugin/notes/notes.js"></script>
     <script>
-      // More info about initialization & config:
-      // - https://revealjs.com/initialization/
-      // - https://revealjs.com/config/
       Reveal.initialize({
-        hash: true,
-
-        // Learn about plugins: https://revealjs.com/plugins/
-        plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom],
+        plugins: [ RevealHighlight, RevealMath, RevealNotes ],
+        hash: false
       });
     </script>
+
   </body>
 </html>

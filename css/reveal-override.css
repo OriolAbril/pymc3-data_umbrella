@@ -1,0 +1,32 @@
+body:after {
+  content: url(../images/PyMC3.png);
+  transform: scale(.5);
+  position: fixed;
+  bottom: 1em;
+  left: 1em;
+}
+
+.multiCol {
+    display: table;
+    table-layout: fixed;
+    width: 150%;
+    .col {
+        display: table-cell;
+        vertical-align: top;
+        width: 50%;
+        padding: 2% 0 2% 3%;
+        &:first-of-type { padding-left: 0; }
+    }
+}
+
+.container{
+  display: flex;
+}
+.col{
+  flex: 1;
+}
+
+.reveal pre code {
+    max-height: 800px;
+    max-width: 1200px;
+}
