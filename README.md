@@ -1,6 +1,8 @@
 # Intuitive Bayesian Modeling with PyMC3
 Slides for my presentation about probabilistic programming and PyMC3 at Data Umbrella. 
 
+The slides are served with [github pages](https://oriolabril.github.io/pymc3-data_umbrella/), use `<space>` key to move to the next slide (right-left arrows are to move to the next section, up-down to move only within a section)
+
 Check out the other awesome Data Umbrella talks at [youtube](https://www.youtube.com/c/dataumbrella)
 
 ## Contributing
