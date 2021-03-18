@@ -37,84 +37,84 @@
 
         <!-- ###### Bayesian paradigm ###### -->
         <section>
-          <section data-auto-animate>
-            <h1>Bayesian paradigm</h1>
-            <p>Data is considered fixed <i>once observed</i></p>
-            <p>Model parameters are <i>treated</i> as random<p>
+        <section data-auto-animate>
+          <h1>Bayesian paradigm</h1>
+          <p>Data is considered fixed <i>once observed</i></p>
+          <p>Model parameters are <i>treated</i> as random<p>
 
-            <aside class="notes">
-              * Data are considered fixed. They used to be random,
-                but once they were written into your
-                lab notebook/spreadsheet/IPython notebook they do not change.
-              * Model parameters themselves may not be random, but Bayesians
-                use probability distribtutions to describe their uncertainty
-                in parameter values, and are therefore treated as random.
-                In some cases, it is useful to consider parameters as having
-                been sampled from probability distributions.
-            </aside>
-          </section>
+          <aside class="notes">
+            * Data are considered fixed. They used to be random,
+              but once they were written into your
+              lab notebook/spreadsheet/IPython notebook they do not change.
+            * Model parameters themselves may not be random, but Bayesians
+              use probability distribtutions to describe their uncertainty
+              in parameter values, and are therefore treated as random.
+              In some cases, it is useful to consider parameters as having
+              been sampled from probability distributions.
+          </aside>
+        </section>
 
-          <section data-auto-animate>
-            <p>Data is considered fixed <i>once observed</i></p>
-            <p>Model parameters are <i>treated</i> as random<p>
-            <i class="fas fa-arrow-down"></i>
-            <p>\[p(\theta \mid y)\]</p>
+        <section data-auto-animate>
+          <p>Data is considered fixed <i>once observed</i></p>
+          <p>Model parameters are <i>treated</i> as random<p>
+          <i class="fas fa-arrow-down"></i>
+          <p>\[p(\theta \mid y)\]</p>
 
-            <aside class="notes">
-              All conclusions from Bayesian statistical procedures are stated
-              in terms of probability statements
+          <aside class="notes">
+            All conclusions from Bayesian statistical procedures are stated
+            in terms of probability statements
 
-              This formulation is generally referred to as inverse probability,
-              because it infers from observations to parameters,
-              or from effects to causes.
-            </aside>
-          </section>
+            This formulation is generally referred to as inverse probability,
+            because it infers from observations to parameters,
+            or from effects to causes.
+          </aside>
+        </section>
 
-          <section data-auto-animate>
-            <p>\[p(\theta \mid y)\]</p>
-            <p><i class="fas fa-arrow-down"></i></p>
-            <img src="images/backward.png"></img>
-          </section>
+        <section data-auto-animate>
+          <p>\[p(\theta \mid y)\]</p>
+          <p><i class="fas fa-arrow-down"></i></p>
+          <img src="images/backward.png"></img>
+        </section>
 
-          <section>
-            \[ p(\theta | y) = \frac{p(y|\theta)p(\theta)}{p(y)} \]
+        <section>
+          \[ p(\theta | y) = \frac{p(y|\theta)p(\theta)}{p(y)} \]
 
-            <aside class="notes">
-              The way to performe this "backwards" movement is by using the
-              Bayes theorem, we combine the a priori information about the
-              parameters with the probability of the observations
-              given some parameters.
-            </aside>
-          </section>
+          <aside class="notes">
+            The way to performe this "backwards" movement is by using the
+            Bayes theorem, we combine the a priori information about the
+            parameters with the probability of the observations
+            given some parameters.
+          </aside>
+        </section>
 
-          <section>
-            <h2>Prior information</h2>
-            <ul>
-              <li>Physical constraints</li>
-              <li>Model constraints</li>
-              <li>Prior studies</li>
-              <li>...</li>
-            </ul>
+        <section>
+          <h2>Prior information</h2>
+          <ul>
+            <li>Physical constraints</li>
+            <li>Model constraints</li>
+            <li>Prior studies</li>
+            <li>...</li>
+          </ul>
 
 
-            <aside class="notes">
-              The prior distribution encodes any and all information that
-              is known about the model parameters before even gathering our
-              data, which may not be much but hardly ever is *none*, so why
-              not take advantage of it?
+          <aside class="notes">
+            The prior distribution encodes any and all information that
+            is known about the model parameters before even gathering our
+            data, which may not be much but hardly ever is *none*, so why
+            not take advantage of it?
 
-              Things like physical constraints: if one parameter is the density
-              of a rock it can't larger than the density of iron.
-              model constraints: variables representing rates or variance can't
-              be negatives. We can also use as priors the results from previous
-              studies, and in case of doubt, one can always use weakly informative
-              priors and perform sensitivity analysis.
-            </aside>
-          </section>
+            Things like physical constraints: if one parameter is the density
+            of a rock it can't larger than the density of iron.
+            model constraints: variables representing rates or variance can't
+            be negatives. We can also use as priors the results from previous
+            studies, and in case of doubt, one can always use weakly informative
+            priors and perform sensitivity analysis.
+          </aside>
+        </section>
 
-          <section>
-            <h2>Uncertainty</h2>
-            <pre><code>
+        <section>
+          <h2>Uncertainty</h2>
+          <pre><code>
 d1 = skewnorm(a=3, loc=-2, scale=2.5)
 d2 = skewnorm(a=-4, loc=2, scale=3)
             </code></pre>
@@ -206,6 +206,7 @@ d2 = skewnorm(a=-4, loc=2, scale=3)
               PyMC3 syntax is concise and clear. It generally follows
               the mathematical notation quite closely.
             </aside>
+          </section>
           <section>
             <h2>Python-driven</h2>
 
