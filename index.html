@@ -30,8 +30,15 @@
               interested in Probabilistic programming or bayes stats in
               general.
 
-              Consider changing the title to "Bayesian Data Science with PyMC3"
-              Term coined (AFAIK) by https://odsc.com/speakers/bayesian-data-science-probabilistic-programming-2/
+              The talk has two main parts,
+              the first half is expainatory whereas in the second
+              we'll go over a couple of examples.
+
+              I will start with
+              a very general intro on key concepts of Bayesian statistics,
+              focused on PPLs, t
+              hen focus on PPLs and why are they becoming so relevant in so many fields,
+              and finish the first part with PyMC3.
             </aside>
         </section>
 
@@ -49,7 +56,7 @@
             * Model parameters themselves may not be random, but Bayesians
               use probability distribtutions to describe their uncertainty
               in parameter values, and are therefore treated as random.
-              In some cases, it is useful to consider parameters as having
+              In many cases, it is useful to consider parameters as having
               been sampled from probability distributions.
           </aside>
         </section>
@@ -63,10 +70,6 @@
           <aside class="notes">
             All conclusions from Bayesian statistical procedures are stated
             in terms of probability statements
-
-            This formulation is generally referred to as inverse probability,
-            because it infers from observations to parameters,
-            or from effects to causes.
           </aside>
         </section>
 
@@ -74,6 +77,16 @@
           <p>\[p(\theta \mid y)\]</p>
           <p><i class="fas fa-arrow-down"></i></p>
           <img src="images/backward.png"></img>
+          <aside class="notes">
+            This formulation is generally referred to as inverse probability,
+            because it infers from observations to parameters,
+            or from effects to causes.
+
+            More often than not, these are the questions we care about.
+            We want the probability of the parameters in the model conditioned
+            on the observed data, not the probability of the observations given
+            some model or parameter.
+          </aside>
         </section>
 
         <section>
@@ -103,30 +116,34 @@
             data, which may not be much but hardly ever is *none*, so why
             not take advantage of it?
 
-            Things like physical constraints: if one parameter is the density
-            of a rock it can't larger than the density of iron.
-            model constraints: variables representing rates or variance can't
-            be negatives. We can also use as priors the results from previous
-            studies, and in case of doubt, one can always use weakly informative
+            Things like
+              * physical constraints: if one parameter is the density
+                of a rock it can't larger than the density of iron.
+              * model constraints: variables representing rates or variance can't
+                be negatives.
+              * We can also use as priors the results from previous studies,
+              * there is work being done too on encoding fairness constraints
+            in priors.
+
+            And in case of doubt, one can always use weakly informative
             priors and perform sensitivity analysis.
           </aside>
         </section>
 
         <section>
           <h2>Uncertainty</h2>
-          <pre><code>
-d1 = skewnorm(a=3, loc=-2, scale=2.5)
-d2 = skewnorm(a=-4, loc=2, scale=3)
-            </code></pre>
+            <img src="images/mode_mean_median.png"></img>
 
             <aside class="notes">
               As we were saying, statements are made in terms of probability
               distributions, which is much more informative than using point
-              estimates or summary statistics. In this case, against what
-              it may seem from the mean and std, the probability of $gt;0
-              is swapped.
+              estimates or summary statistics.
 
-              Consider using datasaurus dozen or anscombe's quartet.
+              A very quick example, these 3 distributions all have the same median,
+              0, so the probability of the parameter being larger than 0 is 50%,
+              yet, if we only looked at their means and standard deviations,
+              we'd probably say that the parameter with the right skew distribution
+              has the largest probability of being positive
             </aside>
           </section>
         </section>
@@ -144,9 +161,11 @@ d2 = skewnorm(a=-4, loc=2, scale=3)
             <aside class="notes">
               Probabilistic Programming languages define base probability
               distributions, transformations, autoregressive models,
-              gaussian processes... that can be combined to defined
-              a model in terms of probability statements by defining
-              the prior and the likelihood.
+              gaussian processes... giving building blocks to users
+              so they can write their own models, virtually any model.
+
+              Much like one can combine the commands and functions a
+              programming language gives them to write custom programs.
             </aside>
           </section>
 
@@ -167,7 +186,7 @@ d2 = skewnorm(a=-4, loc=2, scale=3)
 
               This is called forward sampling, and it is a very powerful technique
               because it allows you to compare the synthetic data with your
-              observations virtually for free.
+              observations very easily, both in terms of compute and developer time.
             </aside>
           </section>
 
@@ -185,6 +204,12 @@ d2 = skewnorm(a=-4, loc=2, scale=3)
               And last but not least, probabilistic programming libraries
               provide multiple inference algorithms to approximate the posterior
               automatically, you only need to define the model.
+
+              This means that you can use the latest cutting edge inference
+              algorithms without having to write them yourself from scratch.
+
+              You should probably consider using the inference capabilities
+              of a PPL even if you are not building the model with it.
             </aside>
           </section>
         </section>
@@ -223,8 +248,8 @@ d2 = skewnorm(a=-4, loc=2, scale=3)
 
             <aside class="notes">
               Thanks to being Python driven, PyMC3 can also be easily extended
-              from within Python itself. You can subclass PyMC3 classes
-              to create new distributions, you can use numba to accelerate
+              from within Python itself. You can subclass PyMC3 distributions
+              to create new ones, you can use numba to accelerate
               expensive computations within the model...
             </aside>
           </section>
@@ -233,9 +258,12 @@ d2 = skewnorm(a=-4, loc=2, scale=3)
 
             <aside class="notes">
               PyMC3 is a community drive project that integrates with the
-              rest of the PyData stack. It has several libraries built
-              on top and the PyMC team contributes to other affine libraries
-              too. It integrates with ArviZ for postprocessing, enabling things
+              rest of the PyData stack.
+
+              There are several libraries in multiple domains built on top of PyMC3
+              and the PyMC team contributes to other affine libraries too.
+
+              It integrates with ArviZ for postprocessing, enabling things
               like label based indexing and computation with xarray, seamless
               visualizations with either matplotlib or bokeh or model summaries
               as pandas dataframes.
@@ -266,6 +294,13 @@ d2 = skewnorm(a=-4, loc=2, scale=3)
                 <th><small>(2nd case study)</small></th>
               </tr>
             </table>
+
+            <aside class="notes">
+              This first example will showcase how intuitive and concise it
+              is to write and fit models in PyMC3,
+              even in cases like this one where we have discrete parameters
+              and a switchpoint.
+            </aside>
           </section>
 
           <section>
@@ -426,7 +461,67 @@ CompoundStep
                 <th><a href="https://www.slideshare.net/CorrieBartelheimer/bayesian-workflow-with-pymc3-and-arviz">Slides</a></th>
               </tr>
             </table>
+            <aside class="notes">
+              This second example showcases a very popular feature of bayesian
+              modeling, hierarchical models.
+            </aside>
           </section>
+
+          <section>
+            <h2>Let's start with a linear regression</h2>
+
+            <img src="images/berlin_prices_raw.png"></img>
+
+            <aside class="notes">
+              Looking at the data it seems like a reasonable choice.
+              However, we may not want to consider all of Berlin at once.
+              Why shouldn't each district have its own slope and intercept?
+            </aside>
+          </section>
+
+          <section>
+            <h2>Let's start with a linear regression</h2>
+
+            <img src="images/berlin_good_slopes.png"></img>
+
+            <aside class="notes">
+              So far so good, but these two districts have both
+              many observations each, which is not always the case.
+            </aside>
+          </section>
+
+          <section>
+            <h2>Let's stop using a linear regression?</h2>
+
+            <img src="images/berlin_bad_slope.png"></img>
+
+            <aside class="notes">
+              If we fit the districts independently, we get very bad results
+              from those with little data, which is not surprising.
+              So what can we do?
+
+              We can use a hierarchical model.
+              These models build higher level and assume that slopes are
+              all generated from the same distribution.
+              They will be different, but not too different.
+              This is called partial pooling, as opposed to
+              complete pooling -> each district has its own slope and
+              no pooling -> all districts have the same slope
+            </aside>
+          </section>
+
+          <section>
+            <h2>Let's go hierarchical!</h2>
+
+            <img src="images/hierarchical_slope.png"></img>
+
+            <aside class="notes">
+              Thanks to partial pooling, Schoneberg can "pool" information
+              from the other districts, which gives a much better looking slope.
+            </aside>
+          </section>
+
+
         </section>
 
         <!-- ###### Closing slides ###### -->
