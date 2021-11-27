@@ -3,6 +3,7 @@ Slides for my presentation about probabilistic programming and PyMC3 at Data Umb
 
 * Talk: [available on YouTube](https://www.youtube.com/watch?v=6dc7JgR8eI0)
 * Slides: [available as GitHub pages](https://oriolabril.github.io/pymc3-data_umbrella/). Use `<space>` key to move to the next slide (right-left arrows are to move to the next section, up-down to move only within a section)
+* Transcript (not yet available): [will be available on DataUmbrella GitHub](https://github.com/data-umbrella/event-transcripts/blob/main/2021/25-oriol-pymc3.md)
 
 Check out the other awesome Data Umbrella talks at [youtube](https://www.youtube.com/c/dataumbrella)
 
